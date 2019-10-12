@@ -3,8 +3,9 @@ import java.util.List;
 import java.util.Scanner;
 
 class AddressBook {
-    private static ArrayList<Person> personList = new ArrayList<>();
-    private static PersonSorter personSorter = new PersonSorter();
+    public static ArrayList<Person> personList = new ArrayList<>();
+    public static PersonSorter personSorter = new PersonSorter();
+
 
     public static void main(String[] args) {
         personList.add(new Person("John", "O'Sullivan", "0831835567", "5, Suir house"));
@@ -12,7 +13,7 @@ class AddressBook {
         chooseOption();
     }
 
-    private static void chooseOption() {
+    public static void chooseOption() {
         Scanner sc = new Scanner(System.in);
         String selection;
         int selectionInt;
@@ -41,9 +42,8 @@ class AddressBook {
                             Scanner sc1 = new Scanner(System.in);
                             String choice1 = sc1.next();
                             if (choice1.equalsIgnoreCase("yes")) {
-                                personList.add(new Person(firstname, lastname, phone, address));
-                                System.out.println("Details saved");
-                            } else {
+                                System.out.println(addPerson(personList,firstname,lastname,phone,address));
+                                } else {
                                 System.out.println("Details Discarded");
                             }
                             break;
@@ -77,7 +77,6 @@ class AddressBook {
                                     }
                                     break;
                                 }
-
                             }
                             break;
 
@@ -162,7 +161,7 @@ class AddressBook {
         }
     }
 
-    private static void displayMenu() {
+    public static void displayMenu() {
         System.out.println("Menu : ");
         System.out.println("Type any number between 1 and 7 for selection");
         System.out.println("1)Create a new Contact Record");
@@ -175,7 +174,7 @@ class AddressBook {
         System.out.println("8)Exit");
     }
 
-    private static void editContact(int choice3) {
+    public static void editContact(int choice3) {
         for (Person person : personList) {
             if (person.getId() == choice3) {
                 Scanner input = new Scanner(System.in);
@@ -211,14 +210,14 @@ class AddressBook {
         }
     }
 
-    private static void displayContactList(List<Person> personList) {
+    public static void displayContactList(List<Person> personList) {
         System.out.println("ID | FULL NAME");
         for (Person person : personList) {
             System.out.println(person.getId() + "  | " + person.getFirstname() + " " + person.getLastname());
         }
     }
 
-    private static String getContactInformation(int inp) {
+    public static String getContactInformation(int inp) {
         int id = 0;
         for (Person p : personList) {
             if (p.getId() == inp) {
@@ -232,7 +231,7 @@ class AddressBook {
                 "Phone : " + personList.get(id).getPhone();
     }
 
-    private static Person checkArray(int in) {
+    public static Person checkArray(int in) {
         Person personFound = null;
         for (Person p : personList) {
             if (p.getId() == in) {
@@ -240,6 +239,9 @@ class AddressBook {
             }
         }
         return personFound;
+    }
+    public static ArrayList<Person> getPersonList (){
+        return personList;
     }
 
     private static void removeContact(int in) {
@@ -261,15 +263,23 @@ class AddressBook {
         return exit;
     }
 
-    private static String countContacts() {
+    public static String countContacts() {
         return "There are " + personList.size() + " contacts in the address book.";
     }
 
-    private static ArrayList<Integer> listOfAllId(ArrayList<Person> list) {
+    public static ArrayList<Integer> listOfAllId(ArrayList<Person> list) {
         ArrayList<Integer> idList = new ArrayList<>();
         for (Person p : list) {
             idList.add(p.getId());
         }
         return idList;
+    }
+    public static String addPerson (ArrayList<Person> persons,String firstname,String lastname, String phone, String address){
+        if(persons.add(new Person(firstname, lastname, phone, address))){
+            return "Contact Added Successfully";
+        }
+        else {
+            return "Some Error! Contact NOT added!";
+        }
     }
 }
