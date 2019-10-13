@@ -9,10 +9,10 @@ class PersonSorter {
             public int compare(Person a,Person b){
                 switch (type.toLowerCase()){
                     case "firstname":
-                        result =  a.getFirstname().compareTo(b.getFirstname());
+                        result = a.getFirstname().toUpperCase().compareTo(b.getFirstname().toUpperCase());
                         break;
                     case "lastname":
-                        result =  a.getLastname().compareTo(b.getLastname());
+                        result = a.getLastname().toUpperCase().compareTo(b.getLastname().toUpperCase());
                         break;
                     case "id":
                         result =  Integer.compare(a.getId(), b.getId());

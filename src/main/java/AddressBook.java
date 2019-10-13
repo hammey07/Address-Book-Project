@@ -5,15 +5,16 @@ import java.util.Scanner;
 class AddressBook {
     private static ArrayList<Person> personList = new ArrayList<>();
     private static PersonSorter personSorter = new PersonSorter();
+    private static int personId = 0;
 
 
     public static void main(String[] args) {
-        personList.add(new Person("John", "O'Sullivan", "0831835567", "5, Suir house"));
-        System.out.println(countContacts());
+        addPerson("Hammad", "Saleem", "0831835568", "5, suir house, canada square, waterford");
         chooseOption();
+        System.out.println("There are " + countContacts() + " in your addressbook.");
     }
 
-    private static void chooseOption() {
+    private static void chooseOption() { // This method contains all functionality of our application
         Scanner sc = new Scanner(System.in);
         String selection;
         int selectionInt;
@@ -42,7 +43,8 @@ class AddressBook {
                             Scanner sc1 = new Scanner(System.in);
                             String choice1 = sc1.next();
                             if (choice1.equalsIgnoreCase("yes")) {
-                                System.out.println(addPerson(personList,firstname,lastname,phone,address));
+                                addPerson(firstname, lastname, phone, address);
+                                System.out.println("Successfully Added!");
                                 } else {
                                 System.out.println("Details Discarded");
                             }
@@ -67,10 +69,11 @@ class AddressBook {
                                 if (listOfAllId(personList).contains(intInputValue)) {
                                     System.out.print("Contact ID found!");
                                     System.out.println("Are you sure you want to remove this contact? (Type Yes / No):");
-                                    System.out.println(checkArray(intInputValue));
+                                    System.out.println(getContact(intInputValue));
                                     String choice2 = sc2.next();
                                     if (choice2.equalsIgnoreCase("yes")) {
                                         removeContact(intInputValue);
+                                        System.out.println("Contact Deleted Successfully");
                                         break;
                                     } else {
                                         System.out.println("Contact NOT deleted");
@@ -123,11 +126,12 @@ class AddressBook {
                                     continue;
                                 }
                                 if (listOfAllId(personList).contains(choice4)) {
-                                    System.out.print("Contact ID found!");
                                     System.out.println(getContactInformation(choice4));
                                     break;
                                 }
                             }
+                            exit = backToMenu();
+
                             break;
 
                         case 5: // LIST ALL CONTACTS BY FIRST NAME
@@ -161,6 +165,7 @@ class AddressBook {
         }
     }
 
+    // Displays our initial menu
     private static void displayMenu() {
         System.out.println("Menu : ");
         System.out.println("Type any number between 1 and 7 for selection");
@@ -174,64 +179,76 @@ class AddressBook {
         System.out.println("8)Exit");
     }
 
+    //editcontact methods initialize the editing procedures of a particular contact.
     private static void editContact(int choice3) {
         for (Person person : personList) {
             if (person.getId() == choice3) {
+                String newFirstname;
+                String newLastname;
+                String newPhone;
+                String newAddress;
                 Scanner input = new Scanner(System.in);
                 System.out.println("Please enter Contact First Name." + " Current Value : " + person.getFirstname());
                 System.out.println("Please leave blank if no changes required");
                 String firstname = input.nextLine();
                 if (!firstname.equals("")) {
-                    person.setFirstname(firstname);
+                    newFirstname = firstname;
+                } else {
+                    newFirstname = person.getFirstname();
                 }
 
                 System.out.println("Please enter Contact Last Name." + " Current Value : " + person.getLastname());
                 System.out.println("Please leave blank if no changes required");
                 String lastname = input.nextLine();
                 if (!lastname.equals("")) {
-                    person.setLastname(lastname);
+                    newLastname = lastname;
+                } else {
+                    newLastname = person.getLastname();
                 }
 
                 System.out.println("Please enter Contact Address." + " Current Value : " + person.getAddress());
                 System.out.println("Please leave blank if no changes required");
                 String address = input.nextLine();
                 if (!address.equals("")) {
-                    person.setAddress(address);
+                    newAddress = address;
+                } else {
+                    newAddress = person.getAddress();
                 }
 
                 System.out.println("Please enter Contact Phone." + " Current Value : " + person.getPhone());
                 System.out.println("Please leave blank if no changes required");
                 String phone = input.nextLine();
                 if (!phone.equals("")) {
-                    person.setPhone(phone);
+                    newPhone = phone;
+                } else {
+                    newPhone = person.getPhone();
                 }
+                editContactDetails(person, newFirstname, newLastname, newPhone, newAddress);
                 break;
             }
         }
     }
 
-    private static void displayContactList(List<Person> personList) {
+    private static List<Person> displayContactList(List<Person> personList) {
         System.out.println("ID | FULL NAME");
         for (Person person : personList) {
             System.out.println(person.getId() + "  | " + person.getFirstname() + " " + person.getLastname());
         }
+        return personList;
     }
 
-    private static String getContactInformation(int inp) {
+    static Person getContactInformation(int inp) {
         int id = 0;
         for (Person p : personList) {
             if (p.getId() == inp) {
                 id = personList.indexOf(p);
             }
         }
-        return "ID : " + personList.get(id).getId() + "\n" +
-                "First Name : " + personList.get(id).getFirstname() + "\n" +
-                "Last Name : " + personList.get(id).getLastname() + "\n" +
-                "Address : " + personList.get(id).getAddress() + "\n" +
-                "Phone : " + personList.get(id).getPhone();
+        return getContact(id);
     }
 
-    private static Person checkArray(int in) {
+    // getContact takes in an ID value and returns the contact object
+    private static Person getContact(int in) {
         Person personFound = null;
         for (Person p : personList) {
             if (p.getId() == in) {
@@ -240,20 +257,23 @@ class AddressBook {
         }
         return personFound;
     }
-    private static ArrayList<Person> getPersonList (){
+
+    //returns contact lists
+    static ArrayList<Person> getPersonList() {
         return personList;
     }
 
-    private static void removeContact(int in) {
+    //RemoveContact removes a contact
+    static void removeContact(int in) {
         for (int i = 0; i < personList.size(); i++) {
             if (personList.get(i).getId() == in) {
                 personList.remove(i);
-                System.out.println("Contact REMOVED successfully!");
                 break;
             }
         }
     }
 
+    // navigates back to menu
     private static boolean backToMenu() {
         boolean exit = false;
         System.out.println("Return to Main Menu? Type Yes / No");
@@ -263,10 +283,12 @@ class AddressBook {
         return exit;
     }
 
-    private static String countContacts() {
-        return "There are " + personList.size() + " contacts in the address book.";
+    //count contact methods counts total contacts available
+    static int countContacts() {
+        return personList.size();
     }
 
+    //Returns a list of all ids in our addressbook
     private static ArrayList<Integer> listOfAllId(ArrayList<Person> list) {
         ArrayList<Integer> idList = new ArrayList<>();
         for (Person p : list) {
@@ -275,12 +297,22 @@ class AddressBook {
         return idList;
     }
 
-    private static String addPerson(ArrayList<Person> persons, String firstname, String lastname, String phone, String address){
-        if(persons.add(new Person(firstname, lastname, phone, address))){
-            return "Contact Added Successfully";
-        }
-        else {
-            return "Some Error! Contact NOT added!";
-        }
+    // addPerson adds a person to addressbook personlist
+    static Person addPerson(String firstname, String lastname, String phone, String address) {
+        Person addedPerson = new Person(firstname, lastname, phone, address, personId);
+        personList.add(addedPerson);
+        personId++;
+        return addedPerson;
     }
+
+    // editContactDetails method edits a person attributes
+    static Person editContactDetails(Person person, String newFirstname, String newLastname, String newPhone, String newAddress) {
+        person.setFirstname(newFirstname);
+        person.setLastname(newLastname);
+        person.setAddress(newAddress);
+        person.setPhone(newPhone);
+        return person;
+    }
+
+
 }

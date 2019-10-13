@@ -6,8 +6,8 @@ class Person {
     private int id;
     private static int counter = 0;
 
-    Person(String firstname, String lastname, String phone, String address) {
-        this.id = counter++;
+    Person(String firstname, String lastname, String phone, String address, int id) {
+        this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.phone = phone;
@@ -52,12 +52,10 @@ class Person {
 
     @Override
     public String toString() {
-        return "Person{" +
-                "id='" + id + '\'' +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", phone='" + phone + '\'' +
-                ", address='" + address + '\'' +
-                '}' + "\n";
+        return "ID : " + id + "\n" +
+                "Firstname : " + firstname + "\n" +
+                "Lastname : " + lastname + "\n" +
+                "Phone :" + phone + "\n" +
+                "Address : " + address + "\n";
     }
 }
